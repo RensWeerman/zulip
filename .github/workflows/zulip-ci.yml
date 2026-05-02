@@ -164,7 +164,7 @@ jobs:
       - name: Run backend tests
         run: |
           source tools/ci/activate-venv
-          perun monitor ./tools/test-backend ${{ matrix.os != 'bookworm' && '--coverage' || '' }} --xml-report --no-html-report --include-webhooks --include-transaction-tests --no-cov-cleanup --ban-console-output
+          perun monitor ./tools/test-backend.py ${{ matrix.os != 'bookworm' && '--coverage' || '' }} --xml-report --no-html-report --include-webhooks --include-transaction-tests --no-cov-cleanup --ban-console-output
 
       - name: Run mypy
         run: |
