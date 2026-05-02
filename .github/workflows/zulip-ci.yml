@@ -163,6 +163,7 @@ jobs:
           pip install perun
       - name: Run api tests
         run: |
+          mkdir perun_results
           source tools/ci/activate-venv
           perun monitor ./tools/test-api.py
           ls
