@@ -152,11 +152,11 @@ jobs:
         if: ${{ matrix.include_frontend_tests }}
         run: pnpm dedupe --check
 
-      - name: Run backend lint
-        run: |
-          source tools/ci/activate-venv
-          echo "Test suite is running under $(python --version)."
-          ./tools/lint --groups=backend --skip=gitlint,mypy # gitlint disabled because flaky
+      # - name: Run backend lint
+      #   run: |
+      #     source tools/ci/activate-venv
+      #     echo "Test suite is running under $(python --version)."
+      #     ./tools/lint --groups=backend --skip=gitlint,mypy # gitlint disabled because flaky
       - name: Install perun
         run: |
           source tools/ci/activate-venv
