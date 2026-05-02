@@ -165,10 +165,9 @@ jobs:
         run: |
           mkdir perun_results
           source tools/ci/activate-venv
-          perun monitor ./tools/test-api.py
+          perun monitor --log_file testing ./tools/test-api.py
           ls
-          ls perun_results
-          cat /perun_results/test-api
+          ls testing
       - name: Run mypy
         run: |
           source tools/ci/activate-venv
