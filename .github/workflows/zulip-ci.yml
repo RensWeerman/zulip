@@ -165,6 +165,8 @@ jobs:
         run: |
           source tools/ci/activate-venv
           perun monitor ./tools/test-api.py
+          ls
+          ls perun_results
           cat /perun_results/test-api
       - name: Run mypy
         run: |
