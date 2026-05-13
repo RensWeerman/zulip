@@ -97,5 +97,5 @@ jobs:
           ./tools/test-api
         with:
           name: codecarbon-emissions
-          path: ./zulip/zulip/emissions.csv
+          path: /__w/zulip/zulip/emissions.csv
 
