@@ -31,6 +31,8 @@ from zerver.models.realms import get_realm
 from zerver.models.users import UserProfile, get_user
 from zerver.openapi.openapi import validate_against_openapi_schema
 
+from codecarbon import EmissionsTracker
+
 ZULIP_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 TEST_FUNCTIONS: dict[str, Callable[..., object]] = {}
@@ -2330,15 +2332,42 @@ def test_the_api(
     # Run `test_api_key_endpoints` before `test_users` so Device records created by
     # `register_push_device` & `register_device` are not bulk-deleted by
     # `regenerate_api_key`, since they are needed for curl tests.
+    tracker = EmissionsTracker(project_name="test_api_key_endpoints")
+    tracker.start()
     test_api_key_endpoints(client)
+    tracker.stop()
+    tracker = EmissionsTracker(project_name="test_users")
+    tracker.start()
     test_users(client, owner_client)
+    tracker.stop()
+    tracker = EmissionsTracker(project_name="test_streams")
+    tracker.start()
     test_streams(client, nonadmin_client)
+    tracker.stop()
+    tracker = EmissionsTracker(project_name="test_messages")
+    tracker.start()
     test_messages(client, nonadmin_client)
+    tracker.stop()
+    tracker = EmissionsTracker(project_name="test_queues")
+    tracker.start()
     test_queues(client)
+    tracker.stop()
+    tracker = EmissionsTracker(project_name="test_server_organizations")
+    tracker.start()
     test_server_organizations(client)
+    tracker.stop()
+    tracker = EmissionsTracker(project_name="test_errors")
+    tracker.start()
     test_errors(client)
+    tracker.stop()
+    tracker = EmissionsTracker(project_name="test_invitations")
+    tracker.start()
     test_invitations(client)
+    tracker.stop()
+    tracker = EmissionsTracker(project_name="test_welcome_bot_custom_message")
+    tracker.start()
     test_welcome_bot_custom_message(client)
+    tracker.stop()
 
     sys.stdout.flush()
     if REGISTERED_TEST_FUNCTIONS != CALLED_TEST_FUNCTIONS:
