@@ -92,4 +92,5 @@ jobs:
       - name: Run documentation and api tests
         run: |
           source tools/ci/activate-venv
+          pip install codecarbon
           ./tools/test-api
