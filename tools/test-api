@@ -110,35 +110,33 @@ with test_server_running(
         site=site,
     )
 
-    tracker1 = EmissionsTracker()
+    tracker1 = EmissionsTracker(project_name="test_the_api")
     tracker1.start()
     test_the_api(client, nonadmin_client, owner_client)
     emissions1 = tracker1.stop()
-    
-    tracker2 = EmissionsTracker()
+
+    tracker2 = EmissionsTracker(project_name="test_generated_curl_examples_for_success")
     tracker2.start()
     test_generated_curl_examples_for_success(client)
     emissions2 = tracker2.stop()
-    
-    tracker3 = EmissionsTracker()
+
+    tracker3 = EmissionsTracker(project_name="test_js_bindings")
     tracker3.start()
     test_js_bindings(client)
     emissions3 = tracker3.stop()
 
-
-    
     # Test error payloads
     client = Client(
         email=email,
         api_key="X" * 32,
         site=site,
     )
-    
-    tracker4 = EmissionsTracker()
+
+    tracker4 = EmissionsTracker(project_name="test_invalid_api_key")
     tracker4.start()
     test_invalid_api_key(client)
     emissions4 = tracker4.stop()
-    
+
     # Test account deactivated error
     # we deactivate user manually because do_deactivate_user removes user session
     change_user_is_active(guest_user, False)
@@ -147,12 +145,12 @@ with test_server_running(
         api_key=api_key,
         site=site,
     )
-    
-    tracker5 = EmissionsTracker()
+
+    tracker5 = EmissionsTracker(project_name="test_user_account_deactivated")
     tracker5.start()
     test_user_account_deactivated(client)
     emissions5 = tracker5.stop()
-    
+
     # reactivate user to avoid any side-effects in other tests.
     do_reactivate_user(guest_user, acting_user=None)
 
@@ -166,8 +164,8 @@ with test_server_running(
         api_key=api_key,
         site=site,
     )
-    
-    tracker6 = EmissionsTracker()
+
+    tracker6 = EmissionsTracker(project_name="test_realm_deactivated")
     tracker6.start()
     test_realm_deactivated(client)
     emissions6 = tracker6.stop()
@@ -175,4 +173,4 @@ with test_server_running(
 
 
 print("API tests passed!")
-print(emissions1, emissions2, emissions3, emissions4, emissions5, emissions6) #Gives emissions, but the trackers print also kWh's and such along the way.
+print(emissions1, emissions2, emissions3, emissions4, emissions5, emissions6) # Gives emissions, but the trackers print also kWh's and such along the way.
