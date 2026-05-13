@@ -81,8 +81,8 @@ jobs:
       - name: Install dependencies
         run: |
           # This is the main setup job for the test suite
-          pip install codecarbon
           ./tools/ci/setup-backend --skip-dev-db-build
+          pip install codecarbon
           scripts/lib/clean_unused_caches.py --verbose --threshold=0
 
       # We run the tests that are only run in a specific job early, so
