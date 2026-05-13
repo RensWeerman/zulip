@@ -6333,6 +6333,7 @@ source = { virtual = "." }
 
 [package.dev-dependencies]
 dev = [
+    { name = "codecarbon" },
     { name = "aioapns" },
     { name = "aiohttp" },
     { name = "aiosmtpd" },
@@ -6726,7 +6727,6 @@ docs = [
     { name = "sphinx-rtd-theme" },
 ]
 prod = [
-    { name = "codecarbon" },
     { name = "aioapns" },
     { name = "aiosmtpd", specifier = ">=1.4.6" },
     { name = "altcha" },
