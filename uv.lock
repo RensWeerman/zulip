@@ -6826,3 +6826,8 @@ sdist = { url = "https://files.pythonhosted.org/packages/ae/40/9366940b1484fd4e9
 wheels = [
     { url = "https://files.pythonhosted.org/packages/c2/16/7410f8e714a109d43d17f4e27c8eabb351557653a9b570db1bd7dfdfd822/zxcvbn-4.5.0-py2.py3-none-any.whl", hash = "sha256:2b6eed621612ce6d65e6e4c7455b966acee87d0280e257956b1f06ccc66bd5ff", size = 409397, upload-time = "2025-02-19T19:03:00.521Z" },
 ]
+
+[[package]]
+name = "codecarbon"
+version = "3.2.6"
+source = { registry = "https://pypi.org/simple" }
