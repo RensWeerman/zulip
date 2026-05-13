@@ -5,8 +5,6 @@ requires-python = ">=3.10"
 
 [dependency-groups]
 prod = [
-  "codecarbon",
-
   # Django itself
   "django[argon2]==5.2.*",
   "asgiref",
@@ -248,6 +246,8 @@ dev = [
   { include-group = "prod" },
   { include-group = "docs" },
   { include-group = "release-tools" },
+
+  "codecarbon",
 
   # moto s3 mock
   "moto[s3]",
