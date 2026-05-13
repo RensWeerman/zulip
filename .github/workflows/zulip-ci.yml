@@ -81,6 +81,7 @@ jobs:
       - name: Install dependencies
         run: |
           # This is the main setup job for the test suite
+          pip install codecarbon
           ./tools/ci/setup-backend --skip-dev-db-build
           scripts/lib/clean_unused_caches.py --verbose --threshold=0
 
@@ -92,7 +93,6 @@ jobs:
       - name: Run documentation and api tests
         run: |
           source tools/ci/activate-venv
-          pip install codecarbon
           ./tools/test-api
       - name: CodeCarbon emissions.csv artifact
         uses: actions/upload-artifact@v4
