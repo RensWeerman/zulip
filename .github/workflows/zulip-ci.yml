@@ -6,7 +6,7 @@ name: Zulip CI
 
 on:
   push:
-    branches: ["*.x", chat.zulip.org, main]
+    branches: ["*.x", chat.zulip.org, main, mschrijer]
     tags: ["*"]
   pull_request:
   workflow_dispatch:
