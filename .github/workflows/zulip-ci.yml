@@ -90,11 +90,12 @@ jobs:
       # identical across different versions are much more rare than
       # frontend linter or node test failures.
       - name: Run documentation and api tests
-        uses: actions/upload-artifact@v4
         run: |
           source tools/ci/activate-venv
           pip install codecarbon
           ./tools/test-api
+      - name: CodeCarbon emissions.csv artifact
+        uses: actions/upload-artifact@v4
         with:
           name: codecarbon-emissions
           path: /__w/zulip/zulip/emissions.csv
