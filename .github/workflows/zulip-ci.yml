@@ -91,6 +91,7 @@ jobs:
       # frontend linter or node test failures.
       - name: Run documentation and api tests
         run: |
+          ls -al /sys/class/powercap/intel-rapl/subsystem
           source tools/ci/activate-venv
           pip install codecarbon
           ./tools/test-api
