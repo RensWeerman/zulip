@@ -306,6 +306,8 @@ def update_presence(client: Client) -> None:
 def create_user(client: Client) -> None:
     # {code_example|start}
     # Create a user.
+    tracker = EmissionsTracker(project_name="create_user_1")
+    tracker.start()
     request = {
         "email": "newbie@zulip.com",
         "password": "temp",
@@ -315,11 +317,15 @@ def create_user(client: Client) -> None:
     # {code_example|end}
     assert_success_response(result)
     validate_against_openapi_schema(result, "/users", "post", "200")
+    tracker.stop()
 
     # Test "Email already used error".
+    tracker = EmissionsTracker(project_name="create_user_2")
+    tracker.start()
     result = client.create_user(request)
     assert_error_response(result)
     validate_against_openapi_schema(result, "/users", "post", "400")
+    tracker.stop()
 
 
 @openapi_test_function("/users/me/status:post")
@@ -2183,7 +2189,7 @@ def test_messages(client: Client, nonadmin_client: Client) -> None:
 
 
 def test_users(client: Client, owner_client: Client) -> None:
-    tracker = EmissionsTracker(project_name="create_user")
+    tracker = EmissionsTracker(project_name="create_user") # Highest consumption
     tracker.start()
     create_user(client)
     tracker.stop()
@@ -2483,7 +2489,7 @@ def test_the_api(
     tracker.start()
     test_api_key_endpoints(client)
     tracker.stop()
-    tracker = EmissionsTracker(project_name="test_users")
+    tracker = EmissionsTracker(project_name="test_users") # Highest consumption
     tracker.start()
     test_users(client, owner_client)
     tracker.stop()

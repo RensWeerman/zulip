@@ -121,7 +121,7 @@ with test_server_running(
     )
 
     reset_realm_uploaded_emoji(iago)
-    tracker1 = EmissionsTracker(project_name="test_the_api")
+    tracker1 = EmissionsTracker(project_name="test_the_api") # Highest consumption
     tracker1.start()
     test_the_api(client, nonadmin_client, owner_client, bot_client)
     emissions1 = tracker1.stop()
