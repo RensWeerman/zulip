@@ -92,7 +92,6 @@ jobs:
       - name: Run documentation and api tests
         run: |
           source tools/ci/activate-venv
-          sudo -H pip install codecarbon
           ./tools/test-api
       - name: CodeCarbon emissions.csv artifact
         uses: actions/upload-artifact@v4
