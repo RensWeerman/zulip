@@ -314,18 +314,18 @@ def create_user(client: Client) -> None:
         "full_name": "New User",
     }
     result = client.create_user(request)
+    tracker.stop()
     # {code_example|end}
     assert_success_response(result)
     validate_against_openapi_schema(result, "/users", "post", "200")
-    tracker.stop()
 
     # Test "Email already used error".
     tracker = EmissionsTracker(project_name="create_user_2")
     tracker.start()
     result = client.create_user(request)
+    tracker.stop()
     assert_error_response(result)
     validate_against_openapi_schema(result, "/users", "post", "400")
-    tracker.stop()
 
 
 @openapi_test_function("/users/me/status:post")
