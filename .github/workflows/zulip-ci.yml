@@ -77,8 +77,10 @@ jobs:
       #  with:
       #    python-version: ${{ matrix.python_version }}
       - name: Install python version
+        continue-on-error: true
         run: |
           yes | sudo apt update
+          yes | sudo apt upgrade
           yes | sudo apt install software-properties-common
           yes | sudo add-apt-repository ppa:deadsnakes/ppa
           yes | sudo apt update
