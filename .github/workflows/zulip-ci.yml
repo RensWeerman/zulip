@@ -32,21 +32,21 @@ jobs:
           # The comments at the top explain how to build and upload these images.
           # Ubuntu 22.04 ships with Python 3.10.12.
           - docker_image: zulip/ci:noble
-            name: Ubuntu 24.04 (Python 3.12, backend)
+            name: Ubuntu 24.04 (Python 3.9, backend)
             os: noble
             include_documentation_tests: false
             include_frontend_tests: false
             python_version: "3.9"
 
           - docker_image: zulip/ci:noble
-            name: Ubuntu 24.04 (Python 3.12, backend)
+            name: Ubuntu 24.04 (Python 3.10, backend)
             os: noble
             include_documentation_tests: false
             include_frontend_tests: false
             python_version: "3.10"
 
           - docker_image: zulip/ci:noble
-            name: Ubuntu 24.04 (Python 3.12, backend)
+            name: Ubuntu 24.04 (Python 3.11, backend)
             os: noble
             include_documentation_tests: false
             include_frontend_tests: false
@@ -78,6 +78,8 @@ jobs:
       #    python-version: ${{ matrix.python_version }}
       - name: Install python version
         run: |
+          sudo apt install software-properties-common
+          sudo add-apt-repository ppa:deadsnakes/ppa
           yes | sudo apt-get install python${{ matrix.python_version }}
           python --version
 
