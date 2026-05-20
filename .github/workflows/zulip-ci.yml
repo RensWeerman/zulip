@@ -73,11 +73,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-python@v6
-        with:
-          python-version: ${{ matrix.python_version }}
-      - name: Check python version
+      #- uses: actions/setup-python@v6
+      #  with:
+      #    python-version: ${{ matrix.python_version }}
+      - name: Install python version
         run: |
+          sudo apt-get install python${{ matrix.python_version }}
           python --version
 
       - name: Create cache directories
