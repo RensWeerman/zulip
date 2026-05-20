@@ -118,6 +118,10 @@ jobs:
 
       - name: Install dependencies
         run: |
+          python3 () {
+            python${{ matrix.python_version }} "$@"
+          }
+          python3 --version
           shopt -s expand_aliases
           alias python=python${{ matrix.python_version }}
           # This is the main setup job for the test suite
