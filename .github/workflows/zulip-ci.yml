@@ -31,32 +31,32 @@ jobs:
           # Base images are built using `tools/ci/Dockerfile`.
           # The comments at the top explain how to build and upload these images.
           # Ubuntu 22.04 ships with Python 3.10.12.
-          - docker_image: zulip/ci:trixie
-            name: Debian 13 (Python 3.9, backend)
-            os: trixie
+          - docker_image: zulip/ci:jammy
+            name: Ubuntu 22.04 (Python 3.9, backend + frontend)
+            os: jammy
             include_documentation_tests: false
-            include_frontend_tests: false
+            include_frontend_tests: true
             python_version: 3.9.0
 
-          - docker_image: zulip/ci:trixie
-            name: Debian 13 (Python 3.10, backend)
-            os: trixie
+          - docker_image: zulip/ci:jammy
+            name: Ubuntu 22.04 (Python 3.10, backend + frontend)
+            os: jammy
             include_documentation_tests: false
-            include_frontend_tests: false
+            include_frontend_tests: true
             python_version: 3.10.0
 
-          - docker_image: zulip/ci:trixie
-            name: Debian 13 (Python 3.11, backend)
-            os: trixie
+          - docker_image: zulip/ci:jammy
+            name: Ubuntu 22.04 (Python 3.11, backend + frontend)
+            os: jammy
             include_documentation_tests: false
-            include_frontend_tests: false
+            include_frontend_tests: true
             python_version: 3.11.0
 
-          - docker_image: zulip/ci:trixie
-            name: Debian 13 (Python 3.12, backend)
-            os: trixie
+          - docker_image: zulip/ci:jammy
+            name: Ubuntu 22.04 (Python 3.12, backend + frontend)
+            os: jammy
             include_documentation_tests: false
-            include_frontend_tests: false
+            include_frontend_tests: true
             python_version: 3.12.0
 
     runs-on: ubuntu-latest
