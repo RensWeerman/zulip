@@ -79,6 +79,7 @@ jobs:
       - name: Install python version
         continue-on-error: true
         run: |
+          set +e
           yes | sudo apt update
           yes | sudo apt upgrade
           yes | sudo apt install software-properties-common
