@@ -86,8 +86,7 @@ jobs:
           yes | sudo apt update
           yes | sudo apt-get install python${{ matrix.python_version }}
           shopt -s expand_aliases
-          alias python3=python${{ matrix.python_version }}
-          python${{ matrix.python_version }} --version
+          sudo ln -sf /usr/bin/python${{ matrix.python_version }} /usr/local/bin/python3
           python3 --version
 
       - name: Create cache directories
@@ -118,14 +117,10 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python3 () {
-            python${{ matrix.python_version }} "$@"
-          }
+
           python3 --version
-          shopt -s expand_aliases
-          alias python=python${{ matrix.python_version }}
           # This is the main setup job for the test suite
-          bash /tools/ci/setup-backend --skip-dev-db-build
+          ./tools/ci/setup-backend --skip-dev-db-build
           scripts/lib/clean_unused_caches.py --verbose --threshold=0
 
       # We run the tests that are only run in a specific job early, so
@@ -135,8 +130,6 @@ jobs:
       # frontend linter or node test failures.
       - name: Run documentation and api tests
         run: |
-          shopt -s expand_aliases
-          alias python=python${{ matrix.python_version }}
           source tools/ci/activate-venv
           pip install codecarbon
           ./tools/test-api
