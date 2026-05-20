@@ -85,6 +85,7 @@ jobs:
           yes | sudo add-apt-repository ppa:deadsnakes/ppa
           yes | sudo apt update
           yes | sudo apt-get install python${{ matrix.python_version }}
+          shopt -s expand_aliases
           alias python3=python${{ matrix.python_version }}
           python${{ matrix.python_version }} --version
           python3 --version
