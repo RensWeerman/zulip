@@ -77,7 +77,6 @@ jobs:
       #  with:
       #    python-version: ${{ matrix.python_version }}
       - name: Install python version
-        continue-on-error: true
         run: |
           set +e
           yes | sudo apt update
@@ -116,6 +115,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          alias python=python${{ matrix.python_version }}
           # This is the main setup job for the test suite
           ./tools/ci/setup-backend --skip-dev-db-build
           scripts/lib/clean_unused_caches.py --verbose --threshold=0
