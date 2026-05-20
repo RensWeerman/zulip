@@ -125,7 +125,7 @@ jobs:
           shopt -s expand_aliases
           alias python=python${{ matrix.python_version }}
           # This is the main setup job for the test suite
-          ./tools/ci/setup-backend --skip-dev-db-build
+          bash /tools/ci/setup-backend --skip-dev-db-build
           scripts/lib/clean_unused_caches.py --verbose --threshold=0
 
       # We run the tests that are only run in a specific job early, so
