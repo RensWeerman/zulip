@@ -36,28 +36,28 @@ jobs:
             os: jammy
             include_documentation_tests: false
             include_frontend_tests: true
-            python_version: 3.9
+            python_version: "3.9"
 
           - docker_image: zulip/ci:jammy
             name: Ubuntu 22.04 (Python 3.10, backend + frontend)
             os: jammy
             include_documentation_tests: false
             include_frontend_tests: true
-            python_version: 3.10
+            python_version: "3.10"
 
           - docker_image: zulip/ci:jammy
             name: Ubuntu 22.04 (Python 3.11, backend + frontend)
             os: jammy
             include_documentation_tests: false
             include_frontend_tests: true
-            python_version: 3.11
+            python_version: "3.11"
 
           - docker_image: zulip/ci:jammy
             name: Ubuntu 22.04 (Python 3.12, backend + frontend)
             os: jammy
             include_documentation_tests: false
             include_frontend_tests: true
-            python_version: 3.12
+            python_version: "3.12"
 
     runs-on: ubuntu-latest
     name: ${{ matrix.name }}
@@ -78,8 +78,7 @@ jobs:
       #    python-version: ${{ matrix.python_version }}
       - name: Install python version
         run: |
-          sudo apt-get install python${{ matrix.python_version }}
-          echo 'Y'
+          yes | sudo apt-get install python${{ matrix.python_version }}
           python --version
 
       - name: Create cache directories
