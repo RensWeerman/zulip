@@ -32,10 +32,32 @@ jobs:
           # The comments at the top explain how to build and upload these images.
           # Ubuntu 22.04 ships with Python 3.10.12.
           - docker_image: zulip/ci:trixie
-            name: Debian 13 (Python 3.13, backend)
+            name: Debian 13 (Python 3.9, backend)
             os: trixie
             include_documentation_tests: false
             include_frontend_tests: false
+            python_version: 3.9
+
+          - docker_image: zulip/ci:trixie
+            name: Debian 13 (Python 3.10, backend)
+            os: trixie
+            include_documentation_tests: false
+            include_frontend_tests: false
+            python_version: 3.10
+
+          - docker_image: zulip/ci:trixie
+            name: Debian 13 (Python 3.11, backend)
+            os: trixie
+            include_documentation_tests: false
+            include_frontend_tests: false
+            python_version: 3.11
+
+          - docker_image: zulip/ci:trixie
+            name: Debian 13 (Python 3.12, backend)
+            os: trixie
+            include_documentation_tests: false
+            include_frontend_tests: false
+            python_version: 3.12
 
     runs-on: ubuntu-latest
     name: ${{ matrix.name }}
@@ -51,6 +73,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python_version }}
+      - name: Check python version
+        run: |
+          python --version
 
       - name: Create cache directories
         run: |
