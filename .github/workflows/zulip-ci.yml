@@ -79,6 +79,7 @@ jobs:
       - name: Install python version
         run: |
           sudo apt-get install python${{ matrix.python_version }}
+          echo 'Y'
           python --version
 
       - name: Create cache directories
