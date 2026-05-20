@@ -87,7 +87,6 @@ jobs:
           yes | sudo apt-get install python${{ matrix.python_version }}
           alias python=python${{ matrix.python_version }}
           python${{ matrix.python_version }} --version
-          python --version
 
       - name: Create cache directories
         run: |
