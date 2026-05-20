@@ -119,8 +119,12 @@ jobs:
       # frontend linter or node test failures.
       - name: Run documentation and api tests
         run: |
-          ls /sys/class/powercap/
-          sudo chmod -R a+r /sys/class/powercap/*
           source tools/ci/activate-venv
           pip install codecarbon
           ./tools/test-api
+      - name: CodeCarbon emissions.csv artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: codecarbon-emissions
+          path: /__w/zulip/zulip/emissions.csv
+
