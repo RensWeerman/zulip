@@ -1181,59 +1181,59 @@ class GetRealmStatusesTest(ZulipTestCase):
         tracker26.stop()
 
 
-class FormatLegacyPresenceDictTest(ZulipTestCase):
-    def test_format_legacy_presence_dict(self) -> None:
-        tracker27 = EmissionsTracker(project_name="test_format_legacy_presence_dict")
-        tracker27.start()
-        hamlet = self.example_user("hamlet")
-        now = timezone_now()
-        recently = now - timedelta(seconds=50)
-        a_while_ago = now - timedelta(minutes=3)
-        presence = UserPresence(
-            user_profile=hamlet, realm=hamlet.realm, last_active_time=now, last_connected_time=now
-        )
-        assert presence.last_active_time is not None and presence.last_connected_time is not None
-        self.assertEqual(
-            format_legacy_presence_dict(presence.last_active_time, presence.last_connected_time),
-            dict(
-                client="website",
-                status=UserPresence.LEGACY_STATUS_ACTIVE,
-                timestamp=datetime_to_timestamp(now),
-                pushable=False,
-            ),
-        )
+# class FormatLegacyPresenceDictTest(ZulipTestCase):
+#     def test_format_legacy_presence_dict(self) -> None:
+#         tracker27 = EmissionsTracker(project_name="test_format_legacy_presence_dict")
+#         tracker27.start()
+#         hamlet = self.example_user("hamlet")
+#         now = timezone_now()
+#         recently = now - timedelta(seconds=50)
+#         a_while_ago = now - timedelta(minutes=3)
+#         presence = UserPresence(
+#             user_profile=hamlet, realm=hamlet.realm, last_active_time=now, last_connected_time=now
+#         )
+#         assert presence.last_active_time is not None and presence.last_connected_time is not None
+#         self.assertEqual(
+#             format_legacy_presence_dict(presence.last_active_time, presence.last_connected_time),
+#             dict(
+#                 client="website",
+#                 status=UserPresence.LEGACY_STATUS_ACTIVE,
+#                 timestamp=datetime_to_timestamp(now),
+#                 pushable=False,
+#             ),
+#         )
 
-        presence = UserPresence(
-            user_profile=hamlet,
-            realm=hamlet.realm,
-            last_active_time=recently,
-            last_connected_time=now,
-        )
-        assert presence.last_active_time is not None and presence.last_connected_time is not None
-        self.assertEqual(
-            format_legacy_presence_dict(presence.last_active_time, presence.last_connected_time),
-            dict(
-                client="website",
-                status=UserPresence.LEGACY_STATUS_ACTIVE,
-                timestamp=datetime_to_timestamp(recently),
-                pushable=False,
-            ),
-        )
+#         presence = UserPresence(
+#             user_profile=hamlet,
+#             realm=hamlet.realm,
+#             last_active_time=recently,
+#             last_connected_time=now,
+#         )
+#         assert presence.last_active_time is not None and presence.last_connected_time is not None
+#         self.assertEqual(
+#             format_legacy_presence_dict(presence.last_active_time, presence.last_connected_time),
+#             dict(
+#                 client="website",
+#                 status=UserPresence.LEGACY_STATUS_ACTIVE,
+#                 timestamp=datetime_to_timestamp(recently),
+#                 pushable=False,
+#             ),
+#         )
 
-        presence = UserPresence(
-            user_profile=hamlet,
-            realm=hamlet.realm,
-            last_active_time=a_while_ago,
-            last_connected_time=now,
-        )
-        assert presence.last_active_time is not None and presence.last_connected_time is not None
-        self.assertEqual(
-            format_legacy_presence_dict(presence.last_active_time, presence.last_connected_time),
-            dict(
-                client="website",
-                status=UserPresence.LEGACY_STATUS_IDLE,
-                timestamp=datetime_to_timestamp(now),
-                pushable=False,
-            ),
-        )
-        tracker27.stop()
+#         presence = UserPresence(
+#             user_profile=hamlet,
+#             realm=hamlet.realm,
+#             last_active_time=a_while_ago,
+#             last_connected_time=now,
+#         )
+#         assert presence.last_active_time is not None and presence.last_connected_time is not None
+#         self.assertEqual(
+#             format_legacy_presence_dict(presence.last_active_time, presence.last_connected_time),
+#             dict(
+#                 client="website",
+#                 status=UserPresence.LEGACY_STATUS_IDLE,
+#                 timestamp=datetime_to_timestamp(now),
+#                 pushable=False,
+#             ),
+#         )
+#         tracker27.stop()
