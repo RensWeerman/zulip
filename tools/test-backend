@@ -450,20 +450,20 @@ def main() -> None:
     else:
         print("-- Running tests in serial mode.", flush=True)
 
-    with block_internet():
-        test_runner = TestRunner(
-            failfast=options.fatal_errors,
-            verbosity=2,
-            parallel=parallel,
-            reverse=options.reverse,
-            keepdb=True,
-        )
-        failures = test_runner.run_tests(
-            suites,
-            failed_tests_path=FAILED_TEST_PATH,
-            full_suite=full_suite,
-            include_webhooks=include_webhooks,
-        )
+    # with block_internet():
+    test_runner = TestRunner(
+        failfast=options.fatal_errors,
+        verbosity=2,
+        parallel=parallel,
+        reverse=options.reverse,
+        keepdb=True,
+    )
+    failures = test_runner.run_tests(
+        suites,
+        failed_tests_path=FAILED_TEST_PATH,
+        full_suite=full_suite,
+        include_webhooks=include_webhooks,
+    )
 
     templates_not_rendered = test_runner.get_shallow_tested_templates()
     # We only check the templates if all the tests ran and passed
