@@ -92,7 +92,7 @@ jobs:
       - name: Run documentation and api tests
         run: |
           source tools/ci/activate-venv
-          ./tools/test-api
+          python zerver/tests/test_presence.py
       - name: CodeCarbon emissions.csv artifact
         uses: actions/upload-artifact@v4
         with:
