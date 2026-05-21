@@ -29,6 +29,8 @@ class TestClientModel(ZulipTestCase):
 
 class UserPresenceModelTests(ZulipTestCase):
     def test_date_logic(self) -> None:
+        tracker1 = EmissionsTracker(project_name="test_date_logic")
+        tracker1.start()
         UserPresence.objects.all().delete()
 
         user_profile = self.example_user("hamlet")
@@ -82,6 +84,7 @@ class UserPresenceModelTests(ZulipTestCase):
         presence_dct, last_update_id = get_presence_dict_by_realm(user_profile.realm)
         self.assert_length(presence_dct, 0)
         self.assertEqual(last_update_id, -1)
+        tracker1.stop()
 
     def test_user_presence_row_creation_simulated_race(self) -> None:
         """
@@ -91,7 +94,8 @@ class UserPresenceModelTests(ZulipTestCase):
         ON CONFLICT DO NOTHING in the SQL query and an early return
         if that happens.
         """
-
+        tracker2 = EmissionsTracker(project_name="test_user_presence_row_creation_simulated_race")
+        tracker2.start()
         user_profile = self.example_user("hamlet")
 
         UserPresence.objects.filter(user_profile=user_profile).delete()
@@ -132,8 +136,11 @@ class UserPresenceModelTests(ZulipTestCase):
                 f"INFO:zerver.actions.presence:UserPresence row already created for {user_profile.id}, returning."
             ],
         )
+        tracker2.stop()
 
     def test_last_update_id_logic(self) -> None:
+        tracker3 = EmissionsTracker(project_name="test_last_update_id_logic")
+        tracker3.start()
         slim_presence = True
         UserPresence.objects.all().delete()
 
@@ -182,8 +189,11 @@ class UserPresenceModelTests(ZulipTestCase):
         self.assertEqual(presence_dct.keys(), {str(iago.id)})
         # last_update_id is incremented due to the new update.
         self.assertEqual(last_update_id, actual_last_update_id + 1)
+        tracker3.stop()
 
     def test_pushable_always_false(self) -> None:
+        tracker4 = EmissionsTracker(project_name="test_pushable_always_false")
+        tracker4.start()
         # This field was never used by clients of the legacy API, so we
         # just want to have it always set to False for API format compatibility.
         UserPresence.objects.all().delete()
@@ -212,6 +222,7 @@ class UserPresenceModelTests(ZulipTestCase):
             kind=PushDeviceToken.APNS,
         )
         self.assertFalse(pushable())
+        tracker4.stop()
 
 
 class UserPresenceTests(ZulipTestCase):
@@ -238,12 +249,17 @@ class UserPresenceTests(ZulipTestCase):
         )
 
     def test_invalid_presence(self) -> None:
+        tracker5 = EmissionsTracker(project_name="test_invalid_presence")
+        tracker5.start()
         user = self.example_user("hamlet")
         self.login_user(user)
         result = self.client_post("/json/users/me/presence", {"status": "foo"})
         self.assert_json_error(result, "Invalid status: foo")
+        tracker5.stop()
 
     def test_history_limit_days_api(self) -> None:
+        tracker6 = EmissionsTracker(project_name="test_history_limit_days_api")
+        tracker6.start()
         UserPresence.objects.all().delete()
 
         hamlet = self.example_user("hamlet")
@@ -289,8 +305,11 @@ class UserPresenceTests(ZulipTestCase):
         json = self.assert_json_success(result)
         presences = json["presences"]
         self.assertEqual(set(presences.keys()), set())
+        tracker6.stop()
 
     def test_last_update_id_api(self) -> None:
+        tracker7 = EmissionsTracker(project_name="test_last_update_id_api")
+        tracker7.start()
         UserPresence.objects.all().delete()
 
         hamlet = self.example_user("hamlet")
@@ -353,8 +372,11 @@ class UserPresenceTests(ZulipTestCase):
         json = self.assert_json_success(result)
         self.assertEqual(set(json["presences"].keys()), {str(hamlet.id)})
         self.assertEqual(json["presence_last_update_id"], last_update_id + 1)
+        tracker7.stop()
 
     def test_last_update_id_api_no_data_edge_cases(self) -> None:
+        tracker8 = EmissionsTracker(project_name="test_last_update_id_api_no_data_edge_cases")
+        tracker8.start()
         hamlet = self.example_user("hamlet")
 
         self.login_user(hamlet)
@@ -390,8 +412,11 @@ class UserPresenceTests(ZulipTestCase):
         # value that we could reflect back to it, we fall back to -1.
         self.assertEqual(json["presence_last_update_id"], -1)
         self.assertFalse(UserPresence.objects.exists())
+        tracker8.stop()
 
     def test_set_idle(self) -> None:
+        tracker9 = EmissionsTracker(project_name="test_set_idle")
+        tracker9.start()
         client = "website"
 
         hamlet = self.example_user("hamlet")
@@ -426,8 +451,11 @@ class UserPresenceTests(ZulipTestCase):
             othello_info["idle_timestamp"],
             hamlet_info["idle_timestamp"],
         )
+        tracker9.stop()
 
     def test_set_active(self) -> None:
+        tracker10 = EmissionsTracker(project_name="test_set_active")
+        tracker10.start()
         hamlet = self.example_user("hamlet")
         othello = self.example_user("othello")
 
@@ -482,9 +510,12 @@ class UserPresenceTests(ZulipTestCase):
             hamlet_info["active_timestamp"],
             othello_info["active_timestamp"],
         )
+        tracker10.stop()
 
     @mock.patch("stripe.Customer.list", return_value=[])
     def test_new_user_input(self, unused_mock: mock.Mock) -> None:
+        tracker11 = EmissionsTracker(project_name="test_new_user_input")
+        tracker11.start()
         """Mostly a test for UserActivityInterval"""
         user_profile = self.example_user("hamlet")
         self.login("hamlet")
@@ -535,8 +566,11 @@ class UserPresenceTests(ZulipTestCase):
         user_profile.save()
         result = self.client_get("/activity")
         self.assertEqual(result.status_code, 200)
+        tracker11.stop()
 
     def test_filter_presence_idle_user_ids(self) -> None:
+        tracker12 = EmissionsTracker(project_name="test_filter_presence_idle_user_ids")
+        tracker12.start()
         user_profile = self.example_user("hamlet")
         from zerver.actions.message_send import filter_presence_idle_user_ids
 
@@ -574,8 +608,11 @@ class UserPresenceTests(ZulipTestCase):
             "/json/users/me/presence", {"status": "active"}, HTTP_USER_AGENT="ZulipMobile/1.0"
         )
         self.assertEqual(filter_presence_idle_user_ids({user_profile.id}), [])
+        tracker12.stop()
 
     def test_same_realm(self) -> None:
+        tracker13 = EmissionsTracker(project_name="test_same_realm")
+        tracker13.start()
         espuser = self.mit_user("espuser")
         self.login_user(espuser)
         self.client_post("/json/users/me/presence", {"status": "idle"}, subdomain="zephyr")
@@ -591,8 +628,11 @@ class UserPresenceTests(ZulipTestCase):
             json["presences"].keys(),
             {hamlet.email},
         )
+        tracker13.stop()
 
     def test_null_timestamps_handling(self) -> None:
+        tracker14 = EmissionsTracker(project_name="test_null_timestamps_handling")
+        tracker14.start()
         """
         Checks that the API handles presences with null presence timestamps correctly.
         The data model now supports them being null, but the API should still return
@@ -633,8 +673,11 @@ class UserPresenceTests(ZulipTestCase):
         result = self.client_get("/json/realm/presence")
         result_dict = self.assert_json_success(result)
         self.assertEqual(set(result_dict["presences"].keys()), {othello.email})
+        tracker14.stop()
 
     def test_query_counts(self) -> None:
+        tracker15 = EmissionsTracker(project_name="test_query_counts")
+        tracker15.start()
         self.login("hamlet")
         with self.assert_database_query_count(6):
             # 1. session
@@ -658,10 +701,13 @@ class UserPresenceTests(ZulipTestCase):
             self.assert_json_success(
                 self.client_post("/json/users/me/presence", {"status": "idle"})
             )
+        tracker15.stop()
 
 
 class SingleUserPresenceTests(ZulipTestCase):
     def test_email_access(self) -> None:
+        tracker16 = EmissionsTracker(project_name="test_email_access")
+        tracker16.start()
         user = self.example_user("hamlet")
         self.login_user(user)
 
@@ -680,8 +726,11 @@ class SingleUserPresenceTests(ZulipTestCase):
         # For a known email, we may simply complain about lack of presence info.
         result = self.client_get("/json/users/email@zulip.com/presence")
         self.assert_json_error(result, "No presence data for email@zulip.com")
+        tracker16.stop()
 
     def test_single_user_get(self) -> None:
+        tracker17 = EmissionsTracker(project_name="test_single_user_get")
+        tracker17.start()
         reset_email_visibility_to_everyone_in_zulip_realm()
 
         # First, we set up the test with some data
@@ -762,8 +811,11 @@ class SingleUserPresenceTests(ZulipTestCase):
         self.assertIsInstance(result_dict["presence"]["idle_timestamp"], int)
         self.assertIsInstance(result_dict["server_timestamp"], float)
         self.assertEqual(set(result_dict["presence"]["website"].keys()), {"status", "timestamp"})
+        tracker17.stop()
 
     def test_ping_only(self) -> None:
+        tracker18 = EmissionsTracker(project_name="test_ping_only")
+        tracker18.start()
         self.login("othello")
         req = dict(
             status="active",
@@ -771,6 +823,7 @@ class SingleUserPresenceTests(ZulipTestCase):
         )
         result = self.client_post("/json/users/me/presence", req)
         self.assertEqual(self.assert_json_success(result)["msg"], "")
+        tracker18.stop()
 
 
 class UserPresenceAggregationTests(ZulipTestCase):
@@ -815,6 +868,8 @@ class UserPresenceAggregationTests(ZulipTestCase):
         return self.assert_json_success(result)
 
     def test_aggregated_info(self) -> None:
+        tracker19 = EmissionsTracker(project_name="test_aggregated_info")
+        tracker19.start()
         user = self.example_user("othello")
         offset = timedelta(seconds=settings.PRESENCE_UPDATE_MIN_FREQ_SECONDS + 1)
         validate_time = timezone_now() - offset
@@ -835,8 +890,11 @@ class UserPresenceAggregationTests(ZulipTestCase):
                 "client": "website",  # This fields is no longer used and is permamenently set to 'website'.
             },
         )
+        tracker19.stop()
 
     def test_aggregated_presence_active(self) -> None:
+        tracker20 = EmissionsTracker(project_name="test_aggregated_presence_active")
+        tracker20.start()
         user = self.example_user("othello")
         validate_time = timezone_now()
         result_dict = self._send_presence_for_aggregated_tests(user, "active", validate_time)
@@ -847,8 +905,11 @@ class UserPresenceAggregationTests(ZulipTestCase):
                 "timestamp": datetime_to_timestamp(validate_time - timedelta(seconds=5)),
             },
         )
+        tracker20.stop()
 
     def test_aggregated_presence_idle(self) -> None:
+        tracker21 = EmissionsTracker(project_name="test_aggregated_presence_idle")
+        tracker21.start()
         user = self.example_user("othello")
         validate_time = timezone_now()
         result_dict = self._send_presence_for_aggregated_tests(user, "idle", validate_time)
@@ -859,8 +920,11 @@ class UserPresenceAggregationTests(ZulipTestCase):
                 "timestamp": datetime_to_timestamp(validate_time - timedelta(seconds=5)),
             },
         )
+        tracker21.stop()
 
     def test_aggregated_presence_mixed(self) -> None:
+        tracker22 = EmissionsTracker(project_name="test_aggregated_presence_mixed")
+        tracker22.start()
         user = self.example_user("othello")
         self.login_user(user)
         validate_time = timezone_now()
@@ -881,8 +945,11 @@ class UserPresenceAggregationTests(ZulipTestCase):
                 "timestamp": datetime_to_timestamp(validate_time - timedelta(seconds=3)),
             },
         )
+        tracker22.stop()
 
     def test_aggregated_presence_offline(self) -> None:
+        tracker23 = EmissionsTracker(project_name="test_aggregated_presence_offline")
+        tracker23.start()
         user = self.example_user("othello")
         self.login_user(user)
         validate_time = timezone_now()
@@ -904,12 +971,13 @@ class UserPresenceAggregationTests(ZulipTestCase):
                 "timestamp": datetime_to_timestamp(validate_time - timedelta(seconds=5)),
             },
         )
+        tracker23.stop()
 
 
 class GetRealmStatusesTest(ZulipTestCase):
     def test_get_statuses(self) -> None:
-        tracker1 = EmissionsTracker(project_name="test_the_api")
-        tracker1.start()
+        tracker24 = EmissionsTracker(project_name="test_get_statuses")
+        tracker24.start()
         # Set up the test by simulating users reporting their presence data.
         othello = self.example_user("othello")
         hamlet = self.example_user("hamlet")
@@ -978,9 +1046,11 @@ class GetRealmStatusesTest(ZulipTestCase):
         self.assertEqual(
             set(json["presences"].keys()), {hamlet.email, polonius.email, othello.email}
         )
-        tracker1.stop()
+        tracker24.stop()
 
     def test_do_change_user_setting_presence_enabled(self) -> None:
+        tracker25 = EmissionsTracker(project_name="test_do_change_user_setting_presence_enabled")
+        tracker25.start()
         """
         Tests the logic for backdating user's presence
         """
@@ -1061,8 +1131,11 @@ class GetRealmStatusesTest(ZulipTestCase):
             ),
         )
         self.assertEqual(presence.last_active_time, now - timedelta(days=100))
+        tracker25.stop()
 
     def test_presence_disabled(self) -> None:
+        tracker26 = EmissionsTracker(project_name="test_presence_disabled")
+        tracker26.start()
         # Disable presence status and test whether the presence
         # is reported or not.
         othello = self.example_user("othello")
@@ -1105,10 +1178,13 @@ class GetRealmStatusesTest(ZulipTestCase):
         )
         json = self.assert_json_success(result)
         self.assertEqual(set(json["presences"].keys()), {str(hamlet.id)})
+        tracker26.stop()
 
 
 class FormatLegacyPresenceDictTest(ZulipTestCase):
     def test_format_legacy_presence_dict(self) -> None:
+        tracker27 = EmissionsTracker(project_name="test_format_legacy_presence_dict")
+        tracker27.start()
         hamlet = self.example_user("hamlet")
         now = timezone_now()
         recently = now - timedelta(seconds=50)
@@ -1160,3 +1236,4 @@ class FormatLegacyPresenceDictTest(ZulipTestCase):
                 pushable=False,
             ),
         )
+        tracker27.stop()
