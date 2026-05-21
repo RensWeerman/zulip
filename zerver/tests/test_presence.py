@@ -16,7 +16,7 @@ from zerver.lib.test_helpers import make_client, reset_email_visibility_to_every
 from zerver.lib.timestamp import datetime_to_timestamp
 from zerver.models import PushDeviceToken, UserActivityInterval, UserPresence, UserProfile
 from zerver.models.realms import get_realm
-
+from codecarbon import EmissionsTracker
 
 class TestClientModel(ZulipTestCase):
     def test_client_stringification(self) -> None:
@@ -908,6 +908,8 @@ class UserPresenceAggregationTests(ZulipTestCase):
 
 class GetRealmStatusesTest(ZulipTestCase):
     def test_get_statuses(self) -> None:
+        tracker1 = EmissionsTracker(project_name="test_the_api")
+        tracker1.start()
         # Set up the test by simulating users reporting their presence data.
         othello = self.example_user("othello")
         hamlet = self.example_user("hamlet")
@@ -976,6 +978,7 @@ class GetRealmStatusesTest(ZulipTestCase):
         self.assertEqual(
             set(json["presences"].keys()), {hamlet.email, polonius.email, othello.email}
         )
+        tracker1.stop()
 
     def test_do_change_user_setting_presence_enabled(self) -> None:
         """
