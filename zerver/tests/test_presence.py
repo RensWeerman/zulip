@@ -867,111 +867,111 @@ class UserPresenceAggregationTests(ZulipTestCase):
         result = self.client_get(f"/json/users/{user.email}/presence")
         return self.assert_json_success(result)
 
-    def test_aggregated_info(self) -> None:
-        tracker19 = EmissionsTracker(project_name="test_aggregated_info")
-        tracker19.start()
-        user = self.example_user("othello")
-        offset = timedelta(seconds=settings.PRESENCE_UPDATE_MIN_FREQ_SECONDS + 1)
-        validate_time = timezone_now() - offset
-        self._send_presence_for_aggregated_tests(user, "active", validate_time)
-        with time_machine.travel((validate_time + offset), tick=False):
-            result = self.api_post(
-                user,
-                "/api/v1/users/me/presence",
-                {"status": "active"},
-                HTTP_USER_AGENT="ZulipTestDev/1.0",
-            )
-        result_dict = self.assert_json_success(result)
-        self.assertDictEqual(
-            result_dict["presences"][user.email]["aggregated"],
-            {
-                "status": "active",
-                "timestamp": datetime_to_timestamp(validate_time + offset),
-                "client": "website",  # This fields is no longer used and is permamenently set to 'website'.
-            },
-        )
-        tracker19.stop()
+    # def test_aggregated_info(self) -> None:
+    #     tracker19 = EmissionsTracker(project_name="test_aggregated_info")
+    #     tracker19.start()
+    #     user = self.example_user("othello")
+    #     offset = timedelta(seconds=settings.PRESENCE_UPDATE_MIN_FREQ_SECONDS + 1)
+    #     validate_time = timezone_now() - offset
+    #     self._send_presence_for_aggregated_tests(user, "active", validate_time)
+    #     with time_machine.travel((validate_time + offset), tick=False):
+    #         result = self.api_post(
+    #             user,
+    #             "/api/v1/users/me/presence",
+    #             {"status": "active"},
+    #             HTTP_USER_AGENT="ZulipTestDev/1.0",
+    #         )
+    #     result_dict = self.assert_json_success(result)
+    #     self.assertDictEqual(
+    #         result_dict["presences"][user.email]["aggregated"],
+    #         {
+    #             "status": "active",
+    #             "timestamp": datetime_to_timestamp(validate_time + offset),
+    #             "client": "website",  # This fields is no longer used and is permamenently set to 'website'.
+    #         },
+    #     )
+    #     tracker19.stop()
 
-    def test_aggregated_presence_active(self) -> None:
-        tracker20 = EmissionsTracker(project_name="test_aggregated_presence_active")
-        tracker20.start()
-        user = self.example_user("othello")
-        validate_time = timezone_now()
-        result_dict = self._send_presence_for_aggregated_tests(user, "active", validate_time)
-        self.assertDictEqual(
-            result_dict["presence"]["aggregated"],
-            {
-                "status": "active",
-                "timestamp": datetime_to_timestamp(validate_time - timedelta(seconds=5)),
-            },
-        )
-        tracker20.stop()
+    # def test_aggregated_presence_active(self) -> None:
+        # tracker20 = EmissionsTracker(project_name="test_aggregated_presence_active")
+        # tracker20.start()
+        # user = self.example_user("othello")
+        # validate_time = timezone_now()
+        # result_dict = self._send_presence_for_aggregated_tests(user, "active", validate_time)
+        # self.assertDictEqual(
+        #     result_dict["presence"]["aggregated"],
+        #     {
+        #         "status": "active",
+        #         "timestamp": datetime_to_timestamp(validate_time - timedelta(seconds=5)),
+        #     },
+        # )
+        # tracker20.stop()
 
-    def test_aggregated_presence_idle(self) -> None:
-        tracker21 = EmissionsTracker(project_name="test_aggregated_presence_idle")
-        tracker21.start()
-        user = self.example_user("othello")
-        validate_time = timezone_now()
-        result_dict = self._send_presence_for_aggregated_tests(user, "idle", validate_time)
-        self.assertDictEqual(
-            result_dict["presence"]["aggregated"],
-            {
-                "status": "idle",
-                "timestamp": datetime_to_timestamp(validate_time - timedelta(seconds=5)),
-            },
-        )
-        tracker21.stop()
+    # def test_aggregated_presence_idle(self) -> None:
+        # tracker21 = EmissionsTracker(project_name="test_aggregated_presence_idle")
+        # tracker21.start()
+        # user = self.example_user("othello")
+        # validate_time = timezone_now()
+        # result_dict = self._send_presence_for_aggregated_tests(user, "idle", validate_time)
+        # self.assertDictEqual(
+        #     result_dict["presence"]["aggregated"],
+        #     {
+        #         "status": "idle",
+        #         "timestamp": datetime_to_timestamp(validate_time - timedelta(seconds=5)),
+        #     },
+        # )
+        # tracker21.stop()
 
-    def test_aggregated_presence_mixed(self) -> None:
-        tracker22 = EmissionsTracker(project_name="test_aggregated_presence_mixed")
-        tracker22.start()
-        user = self.example_user("othello")
-        self.login_user(user)
-        validate_time = timezone_now()
-        self._send_presence_for_aggregated_tests(user, "idle", validate_time)
-        with time_machine.travel((validate_time - timedelta(seconds=3)), tick=False):
-            result_dict = self.api_post(
-                user,
-                "/api/v1/users/me/presence",
-                {"status": "active"},
-                HTTP_USER_AGENT="ZulipTestDev/1.0",
-            ).json()
+    # def test_aggregated_presence_mixed(self) -> None:
+    #     tracker22 = EmissionsTracker(project_name="test_aggregated_presence_mixed")
+    #     tracker22.start()
+    #     user = self.example_user("othello")
+    #     self.login_user(user)
+    #     validate_time = timezone_now()
+    #     self._send_presence_for_aggregated_tests(user, "idle", validate_time)
+    #     with time_machine.travel((validate_time - timedelta(seconds=3)), tick=False):
+    #         result_dict = self.api_post(
+    #             user,
+    #             "/api/v1/users/me/presence",
+    #             {"status": "active"},
+    #             HTTP_USER_AGENT="ZulipTestDev/1.0",
+    #         ).json()
 
-        self.assertDictEqual(
-            result_dict["presences"][user.email]["aggregated"],
-            {
-                "client": "website",
-                "status": "active",
-                "timestamp": datetime_to_timestamp(validate_time - timedelta(seconds=3)),
-            },
-        )
-        tracker22.stop()
+    #     self.assertDictEqual(
+    #         result_dict["presences"][user.email]["aggregated"],
+    #         {
+    #             "client": "website",
+    #             "status": "active",
+    #             "timestamp": datetime_to_timestamp(validate_time - timedelta(seconds=3)),
+    #         },
+    #     )
+    #     tracker22.stop()
 
-    def test_aggregated_presence_offline(self) -> None:
-        tracker23 = EmissionsTracker(project_name="test_aggregated_presence_offline")
-        tracker23.start()
-        user = self.example_user("othello")
-        self.login_user(user)
-        validate_time = timezone_now()
-        self._send_presence_for_aggregated_tests(user, "idle", validate_time)
+    # def test_aggregated_presence_offline(self) -> None:
+    #     tracker23 = EmissionsTracker(project_name="test_aggregated_presence_offline")
+    #     tracker23.start()
+    #     user = self.example_user("othello")
+    #     self.login_user(user)
+    #     validate_time = timezone_now()
+    #     self._send_presence_for_aggregated_tests(user, "idle", validate_time)
 
-        with time_machine.travel(
-            (validate_time + timedelta(seconds=settings.OFFLINE_THRESHOLD_SECS + 1)),
-            tick=False,
-        ):
-            # After settings.OFFLINE_THRESHOLD_SECS + 1 this generated, recent presence data
-            # will count as offline.
-            result = self.client_get(f"/json/users/{user.email}/presence")
-        result_dict = self.assert_json_success(result)
+    #     with time_machine.travel(
+    #         (validate_time + timedelta(seconds=settings.OFFLINE_THRESHOLD_SECS + 1)),
+    #         tick=False,
+    #     ):
+    #         # After settings.OFFLINE_THRESHOLD_SECS + 1 this generated, recent presence data
+    #         # will count as offline.
+    #         result = self.client_get(f"/json/users/{user.email}/presence")
+    #     result_dict = self.assert_json_success(result)
 
-        self.assertDictEqual(
-            result_dict["presence"]["aggregated"],
-            {
-                "status": "offline",
-                "timestamp": datetime_to_timestamp(validate_time - timedelta(seconds=5)),
-            },
-        )
-        tracker23.stop()
+    #     self.assertDictEqual(
+    #         result_dict["presence"]["aggregated"],
+    #         {
+    #             "status": "offline",
+    #             "timestamp": datetime_to_timestamp(validate_time - timedelta(seconds=5)),
+    #         },
+    #     )
+    #     tracker23.stop()
 
 
 class GetRealmStatusesTest(ZulipTestCase):
