@@ -3,7 +3,7 @@ import responses
 
 from zerver.lib.test_classes import ZulipTestCase
 
-
+# Disabled to allow CodeCarbon Internet access.
 # class ResponsesTest(ZulipTestCase):
 #     def test_responses(self) -> None:
 #         # With our test setup, accessing the internet should be blocked.

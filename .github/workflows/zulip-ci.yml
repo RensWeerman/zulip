@@ -97,7 +97,7 @@ jobs:
       - name: CodeCarbon emissions.csv artifact (1)
         uses: actions/upload-artifact@v4
         with:
-          name: codecarbon-emissions
+          name: codecarbon-emissions-1
           path: /__w/zulip/zulip/emissions-1.csv
 
       - name: Run documentation and api tests (2)
@@ -108,7 +108,7 @@ jobs:
       - name: CodeCarbon emissions.csv artifact (2)
         uses: actions/upload-artifact@v4
         with:
-          name: codecarbon-emissions
+          name: codecarbon-emissions-2
           path: /__w/zulip/zulip/emissions-2.csv
 
       - name: Run documentation and api tests (3)
@@ -119,7 +119,7 @@ jobs:
       - name: CodeCarbon emissions.csv artifact (3)
         uses: actions/upload-artifact@v4
         with:
-          name: codecarbon-emissions
+          name: codecarbon-emissions-3
           path: /__w/zulip/zulip/emissions-3.csv
 
       - name: Run documentation and api tests (4)
@@ -130,7 +130,7 @@ jobs:
       - name: CodeCarbon emissions.csv artifact (4)
         uses: actions/upload-artifact@v4
         with:
-          name: codecarbon-emissions
+          name: codecarbon-emissions-4
           path: /__w/zulip/zulip/emissions-4.csv
 
       - name: Run documentation and api tests (5)
@@ -141,6 +141,6 @@ jobs:
       - name: CodeCarbon emissions.csv artifact (5)
         uses: actions/upload-artifact@v4
         with:
-          name: codecarbon-emissions
+          name: codecarbon-emissions-5
           path: /__w/zulip/zulip/emissions-5.csv
 
