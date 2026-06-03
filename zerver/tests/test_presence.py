@@ -784,8 +784,8 @@ class SingleUserPresenceTests(ZulipTestCase):
             result = self.client_get(f"/json/users/{othello.id}/presence")
         self.assert_json_error(result, "Insufficient permission")
 
-        # expected_keys = {"active_timestamp", "idle_timestamp", "website", "aggregated"} # Enable for measuring with legacy format.
-        expected_keys = {"active_timestamp", "idle_timestamp"}
+        expected_keys = {"active_timestamp", "idle_timestamp", "website", "aggregated"} # Enable for measuring with legacy format.
+        # expected_keys = {"active_timestamp", "idle_timestamp"}
 
         result = self.client_get(f"/json/users/{othello.id}/presence")
         result_dict = self.assert_json_success(result)
