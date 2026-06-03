@@ -75,19 +75,19 @@ def get_presence_backend(
         )
     modern_presence = get_presence_dicts_for_rows(presence_rows, slim_presence=True)[str(target.id)]
     # Enable 1, 2, 3, 4, 5, 6, 7 and 8 for measuring with legacy format.
-    legacy_presence = get_presence_dicts_for_rows(presence_rows, slim_presence=False)[target.email] # 1
-    # legacy_presence = {}
+    # legacy_presence = get_presence_dicts_for_rows(presence_rows, slim_presence=False)[target.email] # 1
+    legacy_presence = {}
 
     # The legacy API reports "offline" in the aggregated dict when the
     # user's latest presence update is older than OFFLINE_THRESHOLD_SECS.
     # The modern format leaves that computation to the client.
-    aggregated_info = legacy_presence["aggregated"] # 2
-    aggr_status_duration = datetime_to_timestamp(timezone_now()) - aggregated_info["timestamp"] # 3
-    if aggr_status_duration > settings.OFFLINE_THRESHOLD_SECS: # 4
-        aggregated_info["status"] = "offline" # 5
-    for val in legacy_presence.values(): # 6
-        val.pop("client", None) # 7
-        val.pop("pushable", None) # 8
+    # aggregated_info = legacy_presence["aggregated"] # 2
+    # aggr_status_duration = datetime_to_timestamp(timezone_now()) - aggregated_info["timestamp"] # 3
+    # if aggr_status_duration > settings.OFFLINE_THRESHOLD_SECS: # 4
+        # aggregated_info["status"] = "offline" # 5
+    # for val in legacy_presence.values(): # 6
+        # val.pop("client", None) # 7
+        # val.pop("pushable", None) # 8
 
     presence = {**modern_presence, **legacy_presence}
     return json_success(request, data={"presence": presence, "server_timestamp": server_timestamp})

@@ -22,15 +22,14 @@ def get_presence_dicts_for_rows(
     # 2) `POST /register` when presence data is requested:
     #    https://zulip.com/api/register-queue
     # 3) `GET /users/{user_id_or_email}/presence`: https://zulip.com/api/get-user-presence
-     # Enable 1, 2, 3 and 4 for measuring with legacy format.
-    if slim_presence: # 1
+    if slim_presence:
         # Stringify user_id here, since it's gonna be turned
         # into a string anyway by JSON, and it keeps mypy happy.
         get_user_key = lambda row: str(row["user_profile_id"])
         get_user_presence_info = get_modern_user_presence_info
-    else: # 2
-        get_user_key = lambda row: row["user_profile__email"] # 3
-        get_user_presence_info = get_legacy_user_presence_info # 4
+    else:
+        get_user_key = lambda row: row["user_profile__email"]
+        get_user_presence_info = get_legacy_user_presence_info
 
     user_statuses: dict[str, dict[str, Any]] = {}
 
