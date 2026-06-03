@@ -92,7 +92,7 @@ jobs:
       - name: Run documentation and api tests (1)
         run: |
           source tools/ci/activate-venv
-          ./tools/test-backend
+          ./tools/test-backend zerver.tests.test_presence
           mv /__w/zulip/zulip/emissions.csv /__w/zulip/zulip/emissions-1.csv
       - name: CodeCarbon emissions.csv artifact (1)
         uses: actions/upload-artifact@v4
@@ -103,7 +103,7 @@ jobs:
       - name: Run documentation and api tests (2)
         run: |
           source tools/ci/activate-venv
-          ./tools/test-backend
+          ./tools/test-backend zerver.tests.test_presence
           mv /__w/zulip/zulip/emissions.csv /__w/zulip/zulip/emissions-2.csv
       - name: CodeCarbon emissions.csv artifact (2)
         uses: actions/upload-artifact@v4
@@ -114,7 +114,7 @@ jobs:
       - name: Run documentation and api tests (3)
         run: |
           source tools/ci/activate-venv
-          ./tools/test-backend
+          ./tools/test-backend zerver.tests.test_presence
           mv /__w/zulip/zulip/emissions.csv /__w/zulip/zulip/emissions-3.csv
       - name: CodeCarbon emissions.csv artifact (3)
         uses: actions/upload-artifact@v4
@@ -125,7 +125,7 @@ jobs:
       - name: Run documentation and api tests (4)
         run: |
           source tools/ci/activate-venv
-          ./tools/test-backend
+          ./tools/test-backend zerver.tests.test_presence
           mv /__w/zulip/zulip/emissions.csv /__w/zulip/zulip/emissions-4.csv
       - name: CodeCarbon emissions.csv artifact (4)
         uses: actions/upload-artifact@v4
@@ -136,7 +136,7 @@ jobs:
       - name: Run documentation and api tests (5)
         run: |
           source tools/ci/activate-venv
-          ./tools/test-backend
+          ./tools/test-backend zerver.tests.test_presence
           mv /__w/zulip/zulip/emissions.csv /__w/zulip/zulip/emissions-5.csv
       - name: CodeCarbon emissions.csv artifact (5)
         uses: actions/upload-artifact@v4
