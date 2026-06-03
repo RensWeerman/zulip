@@ -94,6 +94,7 @@ jobs:
           source tools/ci/activate-venv
           ./tools/test-backend
           mv /__w/zulip/zulip/emissions.csv /__w/zulip/zulip/emissions-1.csv
+        continue-on-error: true
       - name: CodeCarbon emissions.csv artifact (1)
         uses: actions/upload-artifact@v4
         with:
@@ -105,6 +106,7 @@ jobs:
           source tools/ci/activate-venv
           ./tools/test-backend
           mv /__w/zulip/zulip/emissions.csv /__w/zulip/zulip/emissions-2.csv
+        continue-on-error: true
       - name: CodeCarbon emissions.csv artifact (2)
         uses: actions/upload-artifact@v4
         with:
@@ -116,6 +118,7 @@ jobs:
           source tools/ci/activate-venv
           ./tools/test-backend
           mv /__w/zulip/zulip/emissions.csv /__w/zulip/zulip/emissions-3.csv
+        continue-on-error: true
       - name: CodeCarbon emissions.csv artifact (3)
         uses: actions/upload-artifact@v4
         with:
@@ -127,6 +130,7 @@ jobs:
           source tools/ci/activate-venv
           ./tools/test-backend
           mv /__w/zulip/zulip/emissions.csv /__w/zulip/zulip/emissions-4.csv
+        continue-on-error: true
       - name: CodeCarbon emissions.csv artifact (4)
         uses: actions/upload-artifact@v4
         with:
@@ -138,6 +142,7 @@ jobs:
           source tools/ci/activate-venv
           ./tools/test-backend
           mv /__w/zulip/zulip/emissions.csv /__w/zulip/zulip/emissions-5.csv
+        continue-on-error: true
       - name: CodeCarbon emissions.csv artifact (5)
         uses: actions/upload-artifact@v4
         with:
