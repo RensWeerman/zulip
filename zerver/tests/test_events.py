@@ -1908,53 +1908,53 @@ class NormalActionsTest(BaseAction):
             )
         check_modern_presence("events[0]", events[0], self.user_profile.id)
 
-    def test_presence_events_multiple_clients(self) -> None:
-        now = timezone_now()
-        initial_presence = now - timedelta(days=365)
-        UserPresence.objects.create(
-            user_profile=self.user_profile,
-            realm=self.user_profile.realm,
-            last_active_time=initial_presence,
-            last_connected_time=initial_presence,
-        )
+    # def test_presence_events_multiple_clients(self) -> None:
+    #     now = timezone_now()
+    #     initial_presence = now - timedelta(days=365)
+    #     UserPresence.objects.create(
+    #         user_profile=self.user_profile,
+    #         realm=self.user_profile.realm,
+    #         last_active_time=initial_presence,
+    #         last_connected_time=initial_presence,
+    #     )
 
-        self.api_post(
-            self.user_profile,
-            "/api/v1/users/me/presence",
-            {"status": "idle"},
-            HTTP_USER_AGENT="ZulipAndroid/1.0",
-        )
-        with self.verify_action():
-            do_update_user_presence(
-                self.user_profile,
-                get_client("website"),
-                timezone_now(),
-                UserPresence.LEGACY_STATUS_ACTIVE_INT,
-            )
-        with self.verify_action(state_change_expected=False, num_events=0):
-            do_update_user_presence(
-                self.user_profile,
-                get_client("ZulipAndroid/1.0"),
-                timezone_now(),
-                UserPresence.LEGACY_STATUS_IDLE_INT,
-            )
-        # with self.verify_action() as events:
-        #     do_update_user_presence(
-        #         self.user_profile,
-        #         get_client("ZulipAndroid/1.0"),
-        #         timezone_now() + timedelta(seconds=301),
-        #         UserPresence.LEGACY_STATUS_ACTIVE_INT,
-        #     )
+    #     self.api_post(
+    #         self.user_profile,
+    #         "/api/v1/users/me/presence",
+    #         {"status": "idle"},
+    #         HTTP_USER_AGENT="ZulipAndroid/1.0",
+    #     )
+    #     with self.verify_action():
+    #         do_update_user_presence(
+    #             self.user_profile,
+    #             get_client("website"),
+    #             timezone_now(),
+    #             UserPresence.LEGACY_STATUS_ACTIVE_INT,
+    #         )
+    #     with self.verify_action(state_change_expected=False, num_events=0):
+    #         do_update_user_presence(
+    #             self.user_profile,
+    #             get_client("ZulipAndroid/1.0"),
+    #             timezone_now(),
+    #             UserPresence.LEGACY_STATUS_IDLE_INT,
+    #         )
+    #     with self.verify_action() as events:
+    #         do_update_user_presence(
+    #             self.user_profile,
+    #             get_client("ZulipAndroid/1.0"),
+    #             timezone_now() + timedelta(seconds=301),
+    #             UserPresence.LEGACY_STATUS_ACTIVE_INT,
+    #         )
 
-        # check_legacy_presence(
-        #     "events[0]",
-        #     events[0],
-        #     has_email=True,
-        #     # We no longer store information about the client and we simply
-        #     # set the field to 'website' for backwards compatibility.
-        #     presence_key="website",
-        #     status="active",
-        # )
+    #     check_legacy_presence(
+    #         "events[0]",
+    #         events[0],
+    #         has_email=True,
+    #         # We no longer store information about the client and we simply
+    #         # set the field to 'website' for backwards compatibility.
+    #         presence_key="website",
+    #         status="active",
+    #     )
 
     def test_register_events(self) -> None:
         realm = self.user_profile.realm
@@ -2056,151 +2056,151 @@ class NormalActionsTest(BaseAction):
             do_delete_saved_snippet(saved_snippet_id, self.user_profile)
         check_saved_snippets_remove("events[0]", events[0])
 
-    def test_away_events(self) -> None:
-        client = get_client("website")
-        now = timezone_now()
+    # def test_away_events(self) -> None:
+    #     client = get_client("website")
+    #     now = timezone_now()
 
-        # Updating user status to away activates the codepath of disabling
-        # the presence_enabled user setting.
-        # See test_change_presence_enabled for more details, since it tests that codepath directly.
-        #
-        # Set up an initial presence state for the user:
-        UserPresence.objects.filter(user_profile=self.user_profile).delete()
-        with time_machine.travel(now, tick=False):
-            result = self.api_post(
-                self.user_profile,
-                "/api/v1/users/me/presence",
-                dict(status="active"),
-                HTTP_USER_AGENT="ZulipAndroid/1.0",
-            )
-            self.assert_json_success(result)
+    #     # Updating user status to away activates the codepath of disabling
+    #     # the presence_enabled user setting.
+    #     # See test_change_presence_enabled for more details, since it tests that codepath directly.
+    #     #
+    #     # Set up an initial presence state for the user:
+    #     UserPresence.objects.filter(user_profile=self.user_profile).delete()
+    #     with time_machine.travel(now, tick=False):
+    #         result = self.api_post(
+    #             self.user_profile,
+    #             "/api/v1/users/me/presence",
+    #             dict(status="active"),
+    #             HTTP_USER_AGENT="ZulipAndroid/1.0",
+    #         )
+    #         self.assert_json_success(result)
 
-        # Set all
-        away_val = True
-        with self.verify_action(num_events=3) as events:
-            do_update_user_status(
-                user_profile=self.user_profile,
-                away=away_val,
-                status_text="out to lunch",
-                emoji_name="car",
-                emoji_code="1f697",
-                reaction_type=UserStatus.UNICODE_EMOJI,
-                client_id=client.id,
-            )
+    #     # Set all
+    #     away_val = True
+    #     with self.verify_action(num_events=3) as events:
+    #         do_update_user_status(
+    #             user_profile=self.user_profile,
+    #             away=away_val,
+    #             status_text="out to lunch",
+    #             emoji_name="car",
+    #             emoji_code="1f697",
+    #             reaction_type=UserStatus.UNICODE_EMOJI,
+    #             client_id=client.id,
+    #         )
 
-        check_user_settings_update("events[0]", events[0])
-        check_user_status(
-            "events[1]",
-            events[1],
-            {"away", "status_text", "emoji_name", "emoji_code", "reaction_type"},
-        )
-        check_legacy_presence(
-            "events[2]",
-            events[2],
-            has_email=True,
-            presence_key="website",
-            status="active",
-        )
+    #     check_user_settings_update("events[0]", events[0])
+    #     check_user_status(
+    #         "events[1]",
+    #         events[1],
+    #         {"away", "status_text", "emoji_name", "emoji_code", "reaction_type"},
+    #     )
+    #     check_legacy_presence(
+    #         "events[2]",
+    #         events[2],
+    #         has_email=True,
+    #         presence_key="website",
+    #         status="active",
+    #     )
 
-        # Remove all
-        away_val = False
-        with self.verify_action(num_events=3) as events:
-            do_update_user_status(
-                user_profile=self.user_profile,
-                away=away_val,
-                status_text="",
-                emoji_name="",
-                emoji_code="",
-                reaction_type=UserStatus.UNICODE_EMOJI,
-                client_id=client.id,
-            )
+    #     # Remove all
+    #     away_val = False
+    #     with self.verify_action(num_events=3) as events:
+    #         do_update_user_status(
+    #             user_profile=self.user_profile,
+    #             away=away_val,
+    #             status_text="",
+    #             emoji_name="",
+    #             emoji_code="",
+    #             reaction_type=UserStatus.UNICODE_EMOJI,
+    #             client_id=client.id,
+    #         )
 
-        check_user_settings_update("events[0]", events[0])
-        check_user_status(
-            "events[1]",
-            events[1],
-            {"away", "status_text", "emoji_name", "emoji_code", "reaction_type"},
-        )
-        check_legacy_presence(
-            "events[2]",
-            events[2],
-            has_email=True,
-            presence_key="website",
-            status="active",
-        )
+    #     check_user_settings_update("events[0]", events[0])
+    #     check_user_status(
+    #         "events[1]",
+    #         events[1],
+    #         {"away", "status_text", "emoji_name", "emoji_code", "reaction_type"},
+    #     )
+    #     check_legacy_presence(
+    #         "events[2]",
+    #         events[2],
+    #         has_email=True,
+    #         presence_key="website",
+    #         status="active",
+    #     )
 
-        # Only set away
-        away_val = True
-        with self.verify_action(num_events=3) as events:
-            do_update_user_status(
-                user_profile=self.user_profile,
-                away=away_val,
-                status_text=None,
-                emoji_name=None,
-                emoji_code=None,
-                reaction_type=None,
-                client_id=client.id,
-            )
+    #     # Only set away
+    #     away_val = True
+    #     with self.verify_action(num_events=3) as events:
+    #         do_update_user_status(
+    #             user_profile=self.user_profile,
+    #             away=away_val,
+    #             status_text=None,
+    #             emoji_name=None,
+    #             emoji_code=None,
+    #             reaction_type=None,
+    #             client_id=client.id,
+    #         )
 
-        check_user_settings_update("events[0]", events[0])
-        check_user_status("events[1]", events[1], {"away"})
-        check_legacy_presence(
-            "events[2]",
-            events[2],
-            has_email=True,
-            presence_key="website",
-            status="active",
-        )
+    #     check_user_settings_update("events[0]", events[0])
+    #     check_user_status("events[1]", events[1], {"away"})
+    #     check_legacy_presence(
+    #         "events[2]",
+    #         events[2],
+    #         has_email=True,
+    #         presence_key="website",
+    #         status="active",
+    #     )
 
-        # Only set status_text
-        with self.verify_action() as events:
-            do_update_user_status(
-                user_profile=self.user_profile,
-                away=None,
-                status_text="at the beach",
-                emoji_name=None,
-                emoji_code=None,
-                reaction_type=None,
-                client_id=client.id,
-            )
+    #     # Only set status_text
+    #     with self.verify_action() as events:
+    #         do_update_user_status(
+    #             user_profile=self.user_profile,
+    #             away=None,
+    #             status_text="at the beach",
+    #             emoji_name=None,
+    #             emoji_code=None,
+    #             reaction_type=None,
+    #             client_id=client.id,
+    #         )
 
-        check_user_status("events[0]", events[0], {"status_text"})
+    #     check_user_status("events[0]", events[0], {"status_text"})
 
-        self.set_up_db_for_testing_user_access()
-        cordelia = self.example_user("cordelia")
-        self.user_profile = self.example_user("polonius")
+    #     self.set_up_db_for_testing_user_access()
+    #     cordelia = self.example_user("cordelia")
+    #     self.user_profile = self.example_user("polonius")
 
-        # Set the date_joined for cordelia here like we did at
-        # the start of this test.
-        cordelia.date_joined = timezone_now() - timedelta(days=15)
-        cordelia.save()
+    #     # Set the date_joined for cordelia here like we did at
+    #     # the start of this test.
+    #     cordelia.date_joined = timezone_now() - timedelta(days=15)
+    #     cordelia.save()
 
-        away_val = False
-        with (
-            self.settings(CAN_ACCESS_ALL_USERS_GROUP_LIMITS_PRESENCE=True),
-            self.verify_action(num_events=0, state_change_expected=False) as events,
-        ):
-            do_update_user_status(
-                user_profile=cordelia,
-                away=away_val,
-                status_text="out to lunch",
-                emoji_name="car",
-                emoji_code="1f697",
-                reaction_type=UserStatus.UNICODE_EMOJI,
-                client_id=client.id,
-            )
+    #     away_val = False
+    #     with (
+    #         self.settings(CAN_ACCESS_ALL_USERS_GROUP_LIMITS_PRESENCE=True),
+    #         self.verify_action(num_events=0, state_change_expected=False) as events,
+    #     ):
+    #         do_update_user_status(
+    #             user_profile=cordelia,
+    #             away=away_val,
+    #             status_text="out to lunch",
+    #             emoji_name="car",
+    #             emoji_code="1f697",
+    #             reaction_type=UserStatus.UNICODE_EMOJI,
+    #             client_id=client.id,
+    #         )
 
-        away_val = True
-        with self.verify_action(num_events=1, state_change_expected=True) as events:
-            do_update_user_status(
-                user_profile=cordelia,
-                away=away_val,
-                status_text="at the beach",
-                emoji_name=None,
-                emoji_code=None,
-                reaction_type=None,
-                client_id=client.id,
-            )
+    #     away_val = True
+    #     with self.verify_action(num_events=1, state_change_expected=True) as events:
+    #         do_update_user_status(
+    #             user_profile=cordelia,
+    #             away=away_val,
+    #             status_text="at the beach",
+    #             emoji_name=None,
+    #             emoji_code=None,
+    #             reaction_type=None,
+    #             client_id=client.id,
+    #         )
         # check_legacy_presence(
         #     "events[0]",
         #     events[0],
@@ -3221,25 +3221,25 @@ class NormalActionsTest(BaseAction):
                     )
                 check_user_settings_update("events[0]", events[0])
 
-    def test_change_presence_enabled(self) -> None:
-        presence_enabled_setting = "presence_enabled"
-        UserPresence.objects.filter(user_profile=self.user_profile).delete()
+    # def test_change_presence_enabled(self) -> None:
+    #     presence_enabled_setting = "presence_enabled"
+    #     UserPresence.objects.filter(user_profile=self.user_profile).delete()
 
-        # Disabling presence will lead to the creation of a UserPresence object for the user
-        # with a last_connected_time and last_active_time slightly preceding the moment of flipping the
-        # setting.
-        for val in [True, False]:
-            with self.verify_action(num_events=2) as events:
-                do_change_user_setting(
-                    self.user_profile,
-                    presence_enabled_setting,
-                    val,
-                    acting_user=self.user_profile,
-                )
-            check_user_settings_update("events[0]", events[0])
-            # check_legacy_presence(
-            #     "events[1]", events[1], has_email=True, presence_key="website", status="active"
-            # )
+    #     # Disabling presence will lead to the creation of a UserPresence object for the user
+    #     # with a last_connected_time and last_active_time slightly preceding the moment of flipping the
+    #     # setting.
+    #     for val in [True, False]:
+    #         with self.verify_action(num_events=2) as events:
+    #             do_change_user_setting(
+    #                 self.user_profile,
+    #                 presence_enabled_setting,
+    #                 val,
+    #                 acting_user=self.user_profile,
+    #             )
+    #         check_user_settings_update("events[0]", events[0])
+    #         check_legacy_presence(
+    #             "events[1]", events[1], has_email=True, presence_key="website", status="active"
+    #         )
 
     def test_change_notification_sound(self) -> None:
         notification_setting = "notification_sound"

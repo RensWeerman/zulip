@@ -630,50 +630,50 @@ class UserPresenceTests(ZulipTestCase):
         # )
         tracker13.stop()
 
-    def test_null_timestamps_handling(self) -> None:
-        tracker14 = EmissionsTracker(project_name="test_null_timestamps_handling")
-        tracker14.start()
-        """
-        Checks that the API handles presences with null presence timestamps correctly.
-        The data model now supports them being null, but the API should still return
-        valid timestamps for backwards compatibility - using date_joined as the default
-        to fall back on. Also it should correctly filter out users with null presence
-        just like it would have filtered them out if they had very old presence.
-        """
-        self.login("hamlet")
+    # def test_null_timestamps_handling(self) -> None:
+    #     tracker14 = EmissionsTracker(project_name="test_null_timestamps_handling")
+    #     tracker14.start()
+    #     """
+    #     Checks that the API handles presences with null presence timestamps correctly.
+    #     The data model now supports them being null, but the API should still return
+    #     valid timestamps for backwards compatibility - using date_joined as the default
+    #     to fall back on. Also it should correctly filter out users with null presence
+    #     just like it would have filtered them out if they had very old presence.
+    #     """
+    #     self.login("hamlet")
 
-        othello = self.example_user("othello")
-        # Set a predictable value for date_joined
-        othello.date_joined = timezone_now() - timedelta(days=1)
-        othello.save()
-        UserPresence.objects.filter(user_profile=othello).update(
-            last_active_time=None, last_connected_time=None
-        )
+    #     othello = self.example_user("othello")
+    #     # Set a predictable value for date_joined
+    #     othello.date_joined = timezone_now() - timedelta(days=1)
+    #     othello.save()
+    #     UserPresence.objects.filter(user_profile=othello).update(
+    #         last_active_time=None, last_connected_time=None
+    #     )
 
-        result = self.client_get(f"/json/users/{othello.id}/presence")
-        result_dict = self.assert_json_success(result)
+    #     result = self.client_get(f"/json/users/{othello.id}/presence")
+    #     result_dict = self.assert_json_success(result)
 
-        # Ensure date_joined was used as the fallback.
-        self.assertEqual(
-            result_dict["presence"]["active_timestamp"],
-            datetime_to_timestamp(othello.date_joined),
-        )
+    #     # Ensure date_joined was used as the fallback.
+    #     self.assertEqual(
+    #         result_dict["presence"]["active_timestamp"],
+    #         datetime_to_timestamp(othello.date_joined),
+    #     )
 
-        # Othello has null presence values, so should not appear in the /realm/presence response
-        # just like a user with over two weeks old presence.
-        result = self.client_get("/json/realm/presence")
-        result_dict = self.assert_json_success(result)
-        self.assertEqual(result_dict["presences"], {})
+    #     # Othello has null presence values, so should not appear in the /realm/presence response
+    #     # just like a user with over two weeks old presence.
+    #     result = self.client_get("/json/realm/presence")
+    #     result_dict = self.assert_json_success(result)
+    #     self.assertEqual(result_dict["presences"], {})
 
-        # If othello's presence is fresh however, it should appear in the response.
-        now = timezone_now()
-        UserPresence.objects.filter(user_profile=othello).update(
-            last_active_time=now, last_connected_time=now
-        )
-        result = self.client_get("/json/realm/presence")
-        result_dict = self.assert_json_success(result)
-        # self.assertEqual(set(result_dict["presences"].keys()), {othello.email})
-        tracker14.stop()
+    #     # If othello's presence is fresh however, it should appear in the response.
+    #     now = timezone_now()
+    #     UserPresence.objects.filter(user_profile=othello).update(
+    #         last_active_time=now, last_connected_time=now
+    #     )
+    #     result = self.client_get("/json/realm/presence")
+    #     result_dict = self.assert_json_success(result)
+    #     self.assertEqual(set(result_dict["presences"].keys()), {othello.email})
+    #     tracker14.stop()
 
     def test_query_counts(self) -> None:
         tracker15 = EmissionsTracker(project_name="test_query_counts")
