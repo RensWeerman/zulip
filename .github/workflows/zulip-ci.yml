@@ -135,50 +135,55 @@ jobs:
           source tools/ci/activate-venv
           pip install codecarbon
           ./tools/test-api
+          mv /__w/zulip/zulip/emissions.csv /__w/zulip/zulip/emissions-1-${{ matrix.python_version }}.csv
       - name: CodeCarbon emissions.csv artifact (1)
         uses: actions/upload-artifact@v4
         with:
           name: codecarbon-emissions-1
-          path: /__w/zulip/zulip/emissions-1.csv
+          path: /__w/zulip/zulip/emissions-1-${{ matrix.python_version }}.csv
 
       - name: Run documentation and api tests (2)
         run: |
           source tools/ci/activate-venv
           pip install codecarbon
           ./tools/test-api
+          mv /__w/zulip/zulip/emissions.csv /__w/zulip/zulip/emissions-2-${{ matrix.python_version }}.csv
       - name: CodeCarbon emissions.csv artifact (2)
         uses: actions/upload-artifact@v4
         with:
           name: codecarbon-emissions-2
-          path: /__w/zulip/zulip/emissions-2.csv
+          path: /__w/zulip/zulip/emissions-2-${{ matrix.python_version }}.csv
 
       - name: Run documentation and api tests (3)
         run: |
           source tools/ci/activate-venv
           pip install codecarbon
           ./tools/test-api
+          mv /__w/zulip/zulip/emissions.csv /__w/zulip/zulip/emissions-3-${{ matrix.python_version }}.csv
       - name: CodeCarbon emissions.csv artifact (3)
         uses: actions/upload-artifact@v4
         with:
           name: codecarbon-emissions-3
-          path: /__w/zulip/zulip/emissions-3.csv
+          path: /__w/zulip/zulip/emissions-3-${{ matrix.python_version }}.csv
 
       - name: Run documentation and api tests (4)
         run: |
           source tools/ci/activate-venv
           pip install codecarbon
           ./tools/test-api
+          mv /__w/zulip/zulip/emissions.csv /__w/zulip/zulip/emissions-4-${{ matrix.python_version }}.csv
       - name: CodeCarbon emissions.csv artifact (4)
         uses: actions/upload-artifact@v4
         with:
           name: codecarbon-emissions-4
-          path: /__w/zulip/zulip/emissions-4.csv
+          path: /__w/zulip/zulip/emissions-4-${{ matrix.python_version }}.csv
 
       - name: Run documentation and api tests (5)
         run: |
           source tools/ci/activate-venv
           pip install codecarbon
           ./tools/test-api
+          mv /__w/zulip/zulip/emissions.csv /__w/zulip/zulip/emissions-5-${{ matrix.python_version }}.csv
       - name: CodeCarbon emissions.csv artifact (5)
         uses: actions/upload-artifact@v4
         with:
